@@ -2,7 +2,6 @@ import React from 'react';
 import '../scss/city.scss'
 
 const City = (props) => {
-    console.log(props.data.wind)
     return (
         <div>
             <header>
@@ -36,6 +35,19 @@ const City = (props) => {
                             <span>Humidity: {props.data.main.humidity}%</span>
                             <span>Wind: {Math.round(props.data.wind.speed)}km/h, NE</span>
                         </div>
+                    </div>
+                    <button className="show-hide-button" onClick={props.toggleButton}>
+                            {props.toggleButton ? '-' : '+'}
+                    </button>
+                    <div className="forecast">
+                        {props.isOpened && (
+                            <div className="forecast__content">
+                                <span>5 Day forecast</span>
+                                <div className="forecast-days">
+                                    test
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
