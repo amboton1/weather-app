@@ -33,12 +33,26 @@ const App = () => {
         })
     }
 
-    // return only daily => 5 * 8 = 40
+    const dayOfTheWeek = [
+        'Sun',
+        'Mon',
+        'Tue',
+        'Wed',
+        'Thu',
+        'Fri',
+        'Sat'
+    ]
+
+    // return only daily => 5 * 8 = 40 (and make object with keys: date, temperature and description)
     for (let index = 0; index < forecastData.forecast.length; index+=8) {
-        dailyForecast.push(forecastData.forecast[index].weather[0], forecastData.forecast[index].main.temp, forecastData.forecast[index].dt_txt)
+        let dateIndex = new Date(forecastData.forecast[index].dt_txt).getDay()
+        dailyForecast.push({
+            date: dayOfTheWeek[dateIndex],
+            temperature: Math.round(forecastData.forecast[index].main.temp),
+            description: forecastData.forecast[index].weather[0].main
+        })
     }
 
-    console.log(dailyForecast)
 
     useEffect(() => {
         getWeather().then(response => {

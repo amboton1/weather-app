@@ -2,6 +2,21 @@ import React from 'react';
 import '../scss/city.scss'
 
 const City = (props) => {
+
+    function dataDisplay() {
+        const renderData = props.forecast.map((test, index) => {
+            return (
+                <div key={index}>
+                    <span> {test.date} </span>
+                    <span> {test.temperature}&#176; </span>
+                    <span> {test.description} </span>
+                </div>
+            )
+        })
+
+        return renderData;
+    }
+
     return (
         <div>
             <header>
@@ -43,8 +58,8 @@ const City = (props) => {
                         {props.isOpened && (
                             <div className="forecast__content">
                                 <span>5 Day forecast</span>
-                                <div className="forecast-days">
-                                    test
+                                <div className="forecast__days">
+                                    {dataDisplay()}
                                 </div>
                             </div>
                         )}
