@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getWeather, getForecast } from '../adapters/openweathermap.adapter';
 import Layout from './Layout';
 import City from './City';
+import { dayOfTheWeek } from '../helpers/dayOfWeek';
 
 const App = () => {
     const weatherObject = {
@@ -33,16 +34,6 @@ const App = () => {
         })
     }
 
-    const dayOfTheWeek = [
-        'Sun',
-        'Mon',
-        'Tue',
-        'Wed',
-        'Thu',
-        'Fri',
-        'Sat'
-    ]
-
     // return only daily => 5 * 8 = 40 (and make object with keys: date, temperature and description)
     for (let index = 0; index < forecastData.forecast.length; index+=8) {
         let dateIndex = new Date(forecastData.forecast[index].dt_txt).getDay()
@@ -63,7 +54,9 @@ const App = () => {
                 wind: response.data.wind
             })
         });
-    }, []);
+
+        setBool(isOpened)
+    }, [isOpened]);
 
     return (
         <Layout>
