@@ -27,15 +27,17 @@ const App = () => {
     const toggleButton = () => {
         setBool(!isOpened)
 
-        getForecast().then(response => {
-            setForecast({
-                forecast: response.data.list,
+        if (!isOpened) {
+            getForecast().then(response => {
+                setForecast({
+                    forecast: response.data.list,
+                })
             })
-        })
+        }
     }
 
     // return only daily => 5 * 8 = 40 (and make object with keys: date, temperature and description)
-    for (let index = 0; index < forecastData.forecast.length; index+=8) {
+    for (let index = 0; index < forecastData.forecast.length; index += 8) {
         let dateIndex = new Date(forecastData.forecast[index].dt_txt).getDay()
         dailyForecast.push({
             date: dayOfTheWeek[dateIndex],
@@ -43,7 +45,6 @@ const App = () => {
             description: forecastData.forecast[index].weather[0].main
         })
     }
-
 
     useEffect(() => {
         getWeather().then(response => {
