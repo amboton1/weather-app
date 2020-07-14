@@ -55,9 +55,7 @@ const App = () => {
                 wind: response.data.wind
             })
         });
-
-        setBool(isOpened)
-    }, [isOpened]);
+    }, []);
 
     return (
         <Layout>
