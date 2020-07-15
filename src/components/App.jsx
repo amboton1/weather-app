@@ -26,14 +26,6 @@ const App = () => {
 
     const toggleButton = () => {
         setBool(!isOpened)
-
-        if (!isOpened) {
-            getForecast().then(response => {
-                setForecast({
-                    forecast: response.data.list,
-                })
-            })
-        }
     }
 
     // return only daily => 5 * 8 = 40 (and make object with keys: date, temperature and description)
@@ -55,6 +47,12 @@ const App = () => {
                 wind: response.data.wind
             })
         });
+
+        getForecast().then(response => {
+            setForecast({
+                forecast: response.data.list,
+            })
+        })
     }, []);
 
     return (
