@@ -1,15 +1,15 @@
 import React from 'react';
 import '../scss/city.scss'
 
-const City = (props) => {
+const CityWeather = ({ forecast, weatherData, onButtonToggle, isForecastBoxOpen }) => {
 
     function dataDisplay() {
-        const renderData = props.forecast.map((test, index) => {
+        const renderData = forecast.map((forecastItem, index) => {
             return (
                 <div key={index}>
-                    <span> {test.date} </span>
-                    <span> {test.temperature}&#176; </span>
-                    <span> {test.description} </span>
+                    <span> {forecastItem.date} </span>
+                    <span> {forecastItem.temperature}&#176; </span>
+                    <span> {forecastItem.description} </span>
                 </div>
             )
         })
@@ -27,13 +27,13 @@ const City = (props) => {
                     <div className="location">
                         <div className="name">
                             <span>
-                                {props.data.name},
-                                {props.data.weather.description}
+                                {weatherData.cityName},
+                                {weatherData.weatherDescription}
                             </span>
                         </div>
                         <div className="icon">
                             <img
-                                src={`http://openweathermap.org/img/wn/${props.data.weather.icon}.png`}
+                                src={`http://openweathermap.org/img/wn/${weatherData.icon}.png`}
                                 alt="weather icon"
                             />
                         </div>
@@ -41,21 +41,21 @@ const City = (props) => {
                     <div className="weather__data">
                         <div className="temperature">
                             <span>
-                                {Math.floor(props.data.main.temp)}&#176;
+                                {Math.floor(weatherData.temp)}&#176;
                             </span>
                         </div>
                         <div className="temperature__details">
-                            <span>Feels like: {props.data.main.feels_like}&#176;</span>
-                            <span>Pressure: {props.data.main.pressure} hPa</span>
-                            <span>Humidity: {props.data.main.humidity}%</span>
-                            <span>Wind: {Math.round(props.data.wind.speed)}km/h, NE</span>
+                            <span>Feels like: {weatherData.feels_like}&#176;</span>
+                            <span>Pressure: {weatherData.pressure} hPa</span>
+                            <span>Humidity: {weatherData.humidity}%</span>
+                            <span>Wind: {Math.round(weatherData.windSpeed)}km/h, NE</span>
                         </div>
                     </div>
-                    <button className="show-hide-button" onClick={props.toggleButton}>
-                            {props.toggleButton ? '-' : '+'}
+                    <button className="show-hide-button" onClick={onButtonToggle}>
+                        {isForecastBoxOpen ? '-' : '+'}
                     </button>
                     <div className="forecast">
-                        {props.isOpened && (
+                        {isForecastBoxOpen && (
                             <div className="forecast__content">
                                 <span>5 Day forecast</span>
                                 <div className="forecast__days">
@@ -70,4 +70,4 @@ const City = (props) => {
     );
 }
 
-export default City;
+export default CityWeather;

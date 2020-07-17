@@ -1,63 +1,55 @@
 import React, { useEffect, useState } from 'react';
 import { getWeather, getForecast } from '../adapters/openweathermap.adapter';
 import Layout from './Layout';
-import City from './City';
-import { dayOfTheWeek } from '../helpers/dayOfWeek';
+import CityWeather from './CityWeather';
 
 const App = () => {
-    const weatherObject = {
-        name: '',
-        weather: [],
-        main: [],
-        wind: []
-    };
-
-    const forecastObject = {
-        forecast: []
-    }
 
     let dailyForecast = [];
 
-    const [forecastData, setForecast] = useState(forecastObject);
+    const [forecastData, setForecastData] = useState({});
 
-    const [weatherData, setData] = useState(weatherObject);
+    const [weatherData, setWeatherData] = useState({});
 
-    const [isOpened, setBool] = useState(false)
+    const [isForecastBoxOpen, setIsForecastBoxOpen] = useState(false)
 
-    const toggleButton = () => {
-        setBool(!isOpened)
-    }
-
-    // return only daily => 5 * 8 = 40 (and make object with keys: date, temperature and description)
-    for (let index = 0; index < forecastData.forecast.length; index += 8) {
-        let dateIndex = new Date(forecastData.forecast[index].dt_txt).getDay()
-        dailyForecast.push({
-            date: dayOfTheWeek[dateIndex],
-            temperature: Math.round(forecastData.forecast[index].main.temp),
-            description: forecastData.forecast[index].weather[0].main
-        })
+    const toggleForecastBoxVisibility = () => {
+        setIsForecastBoxOpen(!isForecastBoxOpen)
     }
 
     useEffect(() => {
         getWeather().then(response => {
-            setData({
-                name: response.data.name,
-                weather: response.data.weather[0],
-                main: response.data.main,
-                wind: response.data.wind
-            })
+            setWeatherData({
+                cityName: response.data.name,
+                weatherDescription: response.data.weather[0].description,
+                icon: response.data.weather[0].icon,
+                temp: response.data.main.temp,
+                feels_like: response.data.main.feels_like,
+                pressure: response.data.main.pressure,
+                humidity: response.data.main.humidity,
+                windSpeed: response.data.wind.speed
+            }, {})
         });
 
         getForecast().then(response => {
-            setForecast({
-                forecast: response.data.list,
-            })
+            // return only daily => 5 * 8 = 40 (and make object with keys: date, temperature and description)
+            for (let index = 0; index < response.data.list.length; index += 8) {
+                const forecast = response.data.list[index];
+                dailyForecast.push({
+                    date: Date(forecast.dt_txt).slice(0, 3),
+                    temperature: Math.round(response.data.list[index].main.temp),
+                    description: response.data.list[index].weather[0].main
+                })
+            }
+
+            setForecastData(dailyForecast)
         })
+
     }, []);
 
     return (
         <Layout>
-            <City data={weatherData} toggleButton={toggleButton} forecast={dailyForecast} isOpened={isOpened} />
+            <CityWeather weatherData={weatherData} onButtonToggle={toggleForecastBoxVisibility} forecast={forecastData} isForecastBoxOpen={isForecastBoxOpen} />
         </Layout>
     )
 }
