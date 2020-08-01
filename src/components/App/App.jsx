@@ -20,11 +20,12 @@ const App = () => {
     useEffect(() => {
         getWeather().then(response => {
             const responseData = response.data;
+            const responseDataWeather = responseData.weather[0] ? responseData.weather[0] : 'Data is currently not available';
 
             setWeatherData({
                 cityName: responseData.name,
-                weatherDescription: responseData.weather[0].description,
-                icon: responseData.weather[0].icon,
+                weatherDescription: responseDataWeather.description,
+                icon: responseDataWeather.icon,
                 temp: responseData.main.temp,
                 feels_like: responseData.main.feels_like,
                 pressure: responseData.main.pressure,
@@ -37,11 +38,12 @@ const App = () => {
             // return only daily => 5 * 8 = 40 (and make object with keys: date, temperature and description)
             for (let index = 0; index < response.data.list.length; index += 8) {
                 const forecastListData = response.data.list[index];
+                const forecastListMainDescription = forecastListData.weather[0].main ? forecastListData.weather[0].main : 'Description not available'
 
                 dailyForecast.push({
                     date: Date(forecastListData.dt_txt).slice(0, 3),
                     temperature: Math.round(forecastListData.main.temp),
-                    description: forecastListData.weather[0].main
+                    description: forecastListMainDescription
                 })
             }
 
