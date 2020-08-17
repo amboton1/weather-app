@@ -1,5 +1,5 @@
 import React from 'react';
-import '../scss/city.scss'
+import './city.scss'
 
 const CityWeather = ({ forecast, weatherData, onButtonToggle, isForecastBoxOpen }) => {
 
