@@ -19,9 +19,6 @@ const CityWeather = ({ forecast, weatherData, onButtonToggle, isForecastBoxOpen 
 
     return (
         <div>
-            <header>
-                <h1>Weather App</h1>
-            </header>
             <div className="container">
                 <div className="content">
                     <div className="location">
@@ -32,10 +29,14 @@ const CityWeather = ({ forecast, weatherData, onButtonToggle, isForecastBoxOpen 
                             </span>
                         </div>
                         <div className="icon">
-                            <img
-                                src={`http://openweathermap.org/img/wn/${weatherData.icon}.png`}
-                                alt="weather icon"
-                            />
+                            {
+                                weatherData.icon ? (
+                                    <img
+                                        src={`http://openweathermap.org/img/wn/${weatherData.icon}.png`}
+                                        alt="weather icon"
+                                    />
+                                ) : null
+                            }
                         </div>
                     </div>
                     <div className="weather__data">
