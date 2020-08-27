@@ -30,7 +30,8 @@ const App = () => {
                 feels_like: responseData.main.feels_like,
                 pressure: responseData.main.pressure,
                 humidity: responseData.main.humidity,
-                windSpeed: responseData.wind.speed
+                windSpeed: responseData.wind.speed,
+                windDegree: responseData.wind.deg
             }, {})
         });
 
