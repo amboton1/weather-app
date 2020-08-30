@@ -4,10 +4,9 @@ import './city.scss'
 const CityWeather = ({ forecast, weatherData, onButtonToggle, isForecastBoxOpen }) => {
 
     function getDirection(degreeAngle) {
-        const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
-        // 360/45 = 8 strana
-        const index = Math.round((degreeAngle / 45) % 8);
-        return directions[index];
+        const directions = ["N", "NE", "NE", "E", "E", "SE", "SE", "S", "S", "SW", "SW", "W", "W", "NW", "NW", "N"];
+        const index = Math.floor((degreeAngle / 22.5));
+        console.log(directions[index]);
     }
 
     function dataDisplay() {
@@ -56,7 +55,7 @@ const CityWeather = ({ forecast, weatherData, onButtonToggle, isForecastBoxOpen 
                             <span>Feels like: {weatherData.feels_like}&#176;</span>
                             <span>Pressure: {weatherData.pressure} hPa</span>
                             <span>Humidity: {weatherData.humidity}%</span>
-                            <span>{`Wind: ${Math.round(weatherData.windSpeed)} km/h, ${getDirection(weatherData.windDegree)}`}</span>
+                            <span>{`Wind: ${Math.round(weatherData.windSpeed)} km/h, `}</span>
                         </div>
                     </div>
                     <button className="show-hide-button" onClick={onButtonToggle}>
