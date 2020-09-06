@@ -11,3 +11,11 @@ test('Returns direction of wind - 45', () => {
 test('Returns direction of wind - 90', () => {
     expect(getDirection(90)).toBe('E');
 });
+
+test('Returns direction of wind - 359', () => {
+    expect(getDirection(359)).toBe('N');
+});
+
+test('Returns direction of wind - 200', () => {
+    expect(getDirection(200)).toBe('S');
+});

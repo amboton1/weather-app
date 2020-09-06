@@ -1,10 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useEffect } from 'react';
+import { getForecast } from '../../adapters/openweathermap.adapter';
 import './city.scss'
 import getDirection from './getDirections.helper';
 
-const CityWeather = ({ forecast, weatherData, onButtonToggle, isForecastBoxOpen }) => {
+const CityWeather = ({ forecastCityName, weatherData }) => {
+
+    const [forecastData, setForecastData] = useState([]);
+
+    const [isForecastBoxOpen, setIsForecastBoxOpen] = useState(false);
+
+    const toggleForecastBoxVisibility = () => {
+        setIsForecastBoxOpen(!isForecastBoxOpen)
+    }
+
+    useEffect(() => {
+        getForecast(forecastCityName).then(response => {
+            var dailyForecast = [];
+            // return only daily => 5 * 8 = 40 (and make object with keys: date, temperature and description)
+            for (let index = 0; index < response.data.list.length; index += 8) {
+                const forecastListData = response.data.list[index];
+                const forecastDay = new Date(forecastListData.dt_txt);
+                const forecastListMainDescription = forecastListData.weather[0].main ? forecastListData.weather[0].main : 'Description not available'
+
+                dailyForecast.push({
+                    date: forecastDay.toLocaleDateString('en', { weekday: 'long' }).slice(0, 3),
+                    temperature: Math.round(forecastListData.main.temp),
+                    description: forecastListMainDescription
+                });
+            }
+            setForecastData(dailyForecast);
+        })
+    }, []);
+
+
     function dataDisplay() {
-        const renderData = forecast.map((forecastItem, index) => {
+        const renderData = forecastData.map((forecastItem, index) => {
             return (
                 <div key={index}>
                     <span> {forecastItem.date} </span>
@@ -52,7 +83,7 @@ const CityWeather = ({ forecast, weatherData, onButtonToggle, isForecastBoxOpen 
                             <span>{`Wind: ${Math.round(weatherData.windSpeed)} km/h, ${getDirection(weatherData.windDegree)}`}</span>
                         </div>
                     </div>
-                    <button className="show-hide-button" onClick={onButtonToggle}>
+                    <button className="show-hide-button" onClick={toggleForecastBoxVisibility}>
                         {isForecastBoxOpen ? '-' : '+'}
                     </button>
                     <div className="forecast">
