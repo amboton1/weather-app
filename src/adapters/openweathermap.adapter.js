@@ -3,7 +3,23 @@ import config from '../config/openweathermap.json'
 
 export const getWeather = (cityName) => {
     return (
-        axios.get(`${config.host}/weather?q=${cityName}&appid=${config.key}&units=metric`)
+        axios.get(`${config.host}/weather?q=${cityName}&appid=${config.key}&units=metric`).then(response => {
+            const responseData = response.data;
+            const responseDataWeather = responseData.weather[0] ? responseData.weather[0] : 'Data is currently not available';
+
+            const weatherData = {
+                cityName: responseData.name,
+                weatherDescription: responseDataWeather.description,
+                icon: responseDataWeather.icon,
+                temp: responseData.main.temp,
+                feels_like: responseData.main.feels_like,
+                pressure: responseData.main.pressure,
+                humidity: responseData.main.humidity,
+                windSpeed: responseData.wind.speed,
+                windDegree: responseData.wind.deg
+            };
+            return weatherData;
+        })
     )
 }
 
