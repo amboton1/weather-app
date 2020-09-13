@@ -9,9 +9,7 @@ const App = () => {
 
     const [citiesWeatherData, setCitiesWeatherData] = useState([]);
 
-    const onInputChange = (event) => {
-        setInputText(event.target.value);
-    }
+    const onInputChange = (event) => setInputText(event.target.value);
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
@@ -33,6 +31,8 @@ const App = () => {
             };
 
             setCitiesWeatherData([...citiesWeatherData, weatherData]);
+
+            setInputText('');
         });
 
     }
@@ -46,7 +46,7 @@ const App = () => {
             </form>
             {
                 citiesWeatherData.map((weather, index) => {
-                    return (<CityWeather key={index} weatherData={weather} forecastCityName={inputText} />)
+                    return (<CityWeather key={index} weatherData={weather} forecastCityName={weather.cityName} />)
                 })
             }
         </Layout>

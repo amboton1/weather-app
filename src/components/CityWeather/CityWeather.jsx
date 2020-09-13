@@ -10,43 +10,22 @@ const CityWeather = ({ forecastCityName, weatherData }) => {
 
     const [isForecastBoxOpen, setIsForecastBoxOpen] = useState(false);
 
-    const toggleForecastBoxVisibility = () => {
-        setIsForecastBoxOpen(!isForecastBoxOpen)
+    const toggleForecastBoxVisibility = () => setIsForecastBoxOpen(!isForecastBoxOpen)
+
+    const renderWeatherDataIcon = () => {
+        return (
+            weatherData.icon ? (
+                <img
+                    src={`http://openweathermap.org/img/wn/${weatherData.icon}.png`}
+                    alt="weather icon"
+                />
+            ) : null
+        )
     }
 
     useEffect(() => {
-        getForecast(forecastCityName).then(response => {
-            var dailyForecast = [];
-            // return only daily => 5 * 8 = 40 (and make object with keys: date, temperature and description)
-            for (let index = 0; index < response.data.list.length; index += 8) {
-                const forecastListData = response.data.list[index];
-                const forecastDay = new Date(forecastListData.dt_txt);
-                const forecastListMainDescription = forecastListData.weather[0].main ? forecastListData.weather[0].main : 'Description not available'
-
-                dailyForecast.push({
-                    date: forecastDay.toLocaleDateString('en', { weekday: 'long' }).slice(0, 3),
-                    temperature: Math.round(forecastListData.main.temp),
-                    description: forecastListMainDescription
-                });
-            }
-            setForecastData(dailyForecast);
-        })
+        getForecast(forecastCityName).then(dailyForecast => setForecastData(dailyForecast));
     }, []);
-
-
-    function dataDisplay() {
-        const renderData = forecastData.map((forecastItem, index) => {
-            return (
-                <div key={index}>
-                    <span> {forecastItem.date} </span>
-                    <span> {forecastItem.temperature}&#176; </span>
-                    <span> {forecastItem.description} </span>
-                </div>
-            )
-        })
-
-        return renderData;
-    }
 
     return (
         <div>
@@ -60,14 +39,7 @@ const CityWeather = ({ forecastCityName, weatherData }) => {
                             </span>
                         </div>
                         <div className="icon">
-                            {
-                                weatherData.icon ? (
-                                    <img
-                                        src={`http://openweathermap.org/img/wn/${weatherData.icon}.png`}
-                                        alt="weather icon"
-                                    />
-                                ) : null
-                            }
+                            {renderWeatherDataIcon()}
                         </div>
                     </div>
                     <div className="weather__data">
@@ -91,7 +63,17 @@ const CityWeather = ({ forecastCityName, weatherData }) => {
                             <div className="forecast__content">
                                 <span>5 Day forecast</span>
                                 <div className="forecast__days">
-                                    {dataDisplay()}
+                                    {
+                                        forecastData.map((forecastItem, index) => {
+                                            return (
+                                                <div key={index}>
+                                                    <span> {forecastItem.date} </span>
+                                                    <span> {forecastItem.temperature}&#176; </span>
+                                                    <span> {forecastItem.description} </span>
+                                                </div>
+                                            )
+                                        })
+                                    }
                                 </div>
                             </div>
                         )}
