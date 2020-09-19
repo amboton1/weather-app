@@ -24,16 +24,20 @@ const App = () => {
 
     return (
         <Layout>
-            <form onSubmit={handleFormSubmit}>
-                <div className="input-field">
-                    <input onChange={onInputChange} value={inputText} type="text" id="city-name" placeholder="Search City" />
-                </div>
-            </form>
-            {
-                citiesWeatherData.map((weather, index) => {
-                    return (<CityWeather key={index} weatherData={weather} forecastCityName={weather.cityName} />)
-                })
-            }
+            <div className="container">
+                <form onSubmit={handleFormSubmit}>
+                    <div className="input-field">
+                        <input onChange={onInputChange} value={inputText} type="text" id="city-name" placeholder="Search City" />
+                    </div>
+                </form>
+                <main className="main-content">
+                    {
+                        citiesWeatherData.map((weather, index) => {
+                            return (<CityWeather key={index} weatherData={weather} forecastCityName={weather.cityName} />)
+                        })
+                    }
+                </main>
+            </div>
         </Layout>
     )
 }

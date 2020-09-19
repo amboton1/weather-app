@@ -12,6 +12,13 @@ body {
   font-family: 'Segoe UI', sans-serif;
   margin: 0;
   padding: 0;
+  background: url('../../static/images/weather.jpg') no-repeat;
+  background-size: cover;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 1366px;
 }
 
 .input-field {
@@ -28,4 +35,10 @@ body {
     padding: 1.5rem 2rem;
     width: 60%;
   }
+}
+
+.main-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
