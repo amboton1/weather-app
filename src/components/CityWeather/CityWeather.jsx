@@ -1,27 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useEffect } from 'react';
+import { getForecast } from '../../adapters/openweathermap.adapter';
 import './city.scss'
+import getDirection from './getDirections.helper';
 
-const CityWeather = ({ forecast, weatherData, onButtonToggle, isForecastBoxOpen }) => {
+const CityWeather = ({ forecastCityName, weatherData }) => {
 
-    function dataDisplay() {
-        const renderData = forecast.map((forecastItem, index) => {
-            return (
-                <div key={index}>
-                    <span> {forecastItem.date} </span>
-                    <span> {forecastItem.temperature}&#176; </span>
-                    <span> {forecastItem.description} </span>
-                </div>
-            )
-        })
+    const [forecastData, setForecastData] = useState([]);
 
-        return renderData;
+    const [isForecastBoxOpen, setIsForecastBoxOpen] = useState(false);
+
+    const toggleForecastBoxVisibility = () => setIsForecastBoxOpen(!isForecastBoxOpen)
+
+    const renderWeatherDataIcon = () => {
+        return (
+            weatherData.icon ? (
+                <img
+                    src={`http://openweathermap.org/img/wn/${weatherData.icon}.png`}
+                    alt="weather icon"
+                />
+            ) : null
+        )
     }
+
+    useEffect(() => {
+        getForecast(forecastCityName).then(dailyForecast => setForecastData(dailyForecast));
+    }, []);
 
     return (
         <div>
-            <header>
-                <h1>Weather App</h1>
-            </header>
             <div className="container">
                 <div className="content">
                     <div className="location">
@@ -32,10 +39,7 @@ const CityWeather = ({ forecast, weatherData, onButtonToggle, isForecastBoxOpen 
                             </span>
                         </div>
                         <div className="icon">
-                            <img
-                                src={`http://openweathermap.org/img/wn/${weatherData.icon}.png`}
-                                alt="weather icon"
-                            />
+                            {renderWeatherDataIcon()}
                         </div>
                     </div>
                     <div className="weather__data">
@@ -48,10 +52,10 @@ const CityWeather = ({ forecast, weatherData, onButtonToggle, isForecastBoxOpen 
                             <span>Feels like: {weatherData.feels_like}&#176;</span>
                             <span>Pressure: {weatherData.pressure} hPa</span>
                             <span>Humidity: {weatherData.humidity}%</span>
-                            <span>Wind: {Math.round(weatherData.windSpeed)}km/h, NE</span>
+                            <span>{`Wind: ${Math.round(weatherData.windSpeed)} km/h, ${getDirection(weatherData.windDegree)}`}</span>
                         </div>
                     </div>
-                    <button className="show-hide-button" onClick={onButtonToggle}>
+                    <button className="show-hide-button" onClick={toggleForecastBoxVisibility}>
                         {isForecastBoxOpen ? '-' : '+'}
                     </button>
                     <div className="forecast">
@@ -59,7 +63,17 @@ const CityWeather = ({ forecast, weatherData, onButtonToggle, isForecastBoxOpen 
                             <div className="forecast__content">
                                 <span>5 Day forecast</span>
                                 <div className="forecast__days">
-                                    {dataDisplay()}
+                                    {
+                                        forecastData.map((forecastItem, index) => {
+                                            return (
+                                                <div key={index}>
+                                                    <span> {forecastItem.date} </span>
+                                                    <span> {forecastItem.temperature}&#176; </span>
+                                                    <span> {forecastItem.description} </span>
+                                                </div>
+                                            )
+                                        })
+                                    }
                                 </div>
                             </div>
                         )}
