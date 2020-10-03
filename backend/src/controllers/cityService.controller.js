@@ -1,6 +1,6 @@
 const cities = require('../static/json/cities.json');
 
-const findCities = (inputCityName) => {
+function findCities(inputCityName) {
     let cityCounter = 0;
 
     let citiesArray = [];
