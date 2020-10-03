@@ -43,3 +43,11 @@ export const getForecast = (cityName) => {
         })
     )
 }
+
+export const getCityFromInput = (cityName) => {
+    return (
+        axios.get(`/cities/${cityName}`).then(response => {
+            console.log(response.data);
+        })
+    )
+}

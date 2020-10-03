@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { getWeather } from '../../adapters/openweathermap.adapter';
+import { getCityFromInput, getWeather } from '../../adapters/openweathermap.adapter';
+import { debounce } from 'lodash';
 import Layout from '../Layout/Layout';
 import CityWeather from '../CityWeather/CityWeather';
 
@@ -9,7 +10,10 @@ const App = () => {
 
     const [citiesWeatherData, setCitiesWeatherData] = useState([]);
 
-    const onInputChange = (event) => setInputText(event.target.value);
+    const onInputChange = debounce((text) => {
+        setInputText(text);
+        getCityFromInput(text);
+    }, 500)
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
@@ -27,7 +31,7 @@ const App = () => {
             <div className="container">
                 <form onSubmit={handleFormSubmit}>
                     <div className="input-field">
-                        <input onChange={onInputChange} value={inputText} type="text" id="city-name" placeholder="Search City" />
+                        <input onChange={(e) => onInputChange(e.target.value)} type="text" id="city-name" placeholder="Search City" />
                     </div>
                 </form>
                 <main className="main-content">

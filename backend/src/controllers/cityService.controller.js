@@ -11,7 +11,7 @@ function findCities(inputCityName) {
 
         if (lowerCaseCityName.startsWith(inputCityName)) {
             cityCounter += 1;
-            if (cityCounter === 5) {
+            if (cityCounter === 6) {
                 break;
             }
             citiesArray.push(lowerCaseCityName);
