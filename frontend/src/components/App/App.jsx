@@ -10,20 +10,24 @@ const App = () => {
 
     const [citiesWeatherData, setCitiesWeatherData] = useState([]);
 
+    const [filteredArray, setFilteredArray] = useState([])
+
     const onInputChange = debounce((text) => {
         setInputText(text);
-        getCityFromInput(text);
+        getCityFromInput(text).then((filteredArrayFromInput) => {
+            setFilteredArray(filteredArrayFromInput);
+        })
     }, 500)
+
+    const renderAutocompleteList = () => filteredArray.map(item => <option key={item} value={item} />)
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
 
         getWeather(inputText).then((weatherData) => {
             setCitiesWeatherData([...citiesWeatherData, weatherData]);
-
             setInputText('');
         })
-
     }
 
     return (
@@ -31,7 +35,10 @@ const App = () => {
             <div className="container">
                 <form onSubmit={handleFormSubmit}>
                     <div className="input-field">
-                        <input onChange={(e) => onInputChange(e.target.value)} type="text" id="city-name" placeholder="Search City" />
+                        <input list="cities" onChange={(e) => onInputChange(e.target.value)} type="text" id="city-name" placeholder="Search City" />
+                        <datalist id="cities">
+                            {renderAutocompleteList()}
+                        </datalist>
                     </div>
                 </form>
                 <main className="main-content">
