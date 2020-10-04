@@ -14,9 +14,7 @@ const App = () => {
 
     const onInputChange = debounce((text) => {
         setInputText(text);
-        getCityFromInput(text).then((filteredArrayFromInput) => {
-            setFilteredArray(filteredArrayFromInput);
-        })
+        getCityFromInput(text).then((filteredArrayFromInput) => setFilteredArray(filteredArrayFromInput));
     }, 500)
 
     const renderAutocompleteList = () => filteredArray.map(item => <option key={item} value={item} />)
