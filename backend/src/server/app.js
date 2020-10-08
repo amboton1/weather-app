@@ -1,5 +1,5 @@
 const express = require('express');
-const { findCities } = require('../controllers/cityService.controller');
+const { findCities } = require('../controllers/cityService');
 
 const app = express();
 
