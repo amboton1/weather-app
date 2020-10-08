@@ -47,8 +47,8 @@ export const getForecast = (cityName) => {
 export const getCityFromInput = (cityName) => {
     return (
         axios.get(`/cities/${cityName}`).then(response => {
-            const filteredArrayFromInput = response.data;
-            return filteredArrayFromInput;
+            const autocompleteDropdownCities = response.data;
+            return autocompleteDropdownCities;
         })
     )
 }

@@ -6,15 +6,12 @@ function findCities(inputCityName) {
     let citiesArray = [];
 
     for (let index = 0; index < cities.length; index++) {
-        let lowerCaseCityName = cities[index].name.toLowerCase();
-        inputCityName = inputCityName.toLowerCase();
-
-        if (lowerCaseCityName.startsWith(inputCityName)) {
+        if (cities[index].name.startsWith(inputCityName)) {
+            citiesArray.push(`${cities[index].name}, ${cities[index].country}`);
             cityCounter += 1;
-            if (cityCounter === 6) {
+            if (cityCounter === 5) {
                 break;
             }
-            citiesArray.push(lowerCaseCityName);
         }
     }
     return citiesArray;

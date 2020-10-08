@@ -14,10 +14,10 @@ const App = () => {
 
     const onInputChange = debounce((text) => {
         setInputText(text);
-        getCityFromInput(text).then((filteredArrayFromInput) => setFilteredArray(filteredArrayFromInput));
+        getCityFromInput(text).then((autocompleteDropdownCities) => setFilteredArray(autocompleteDropdownCities));
     }, 500)
 
-    const renderAutocompleteList = () => filteredArray.map(item => <option key={item} value={item} />)
+    const renderAutocompleteList = () => filteredArray.map((item, index) => <option key={index} value={item} />)
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
@@ -33,7 +33,7 @@ const App = () => {
             <div className="container">
                 <form onSubmit={handleFormSubmit}>
                     <div className="input-field">
-                        <input list="cities" onChange={(e) => onInputChange(e.target.value)} type="text" id="city-name" placeholder="Search City" />
+                        <input autoComplete="off" list="cities" onChange={(e) => onInputChange(e.target.value)} type="text" id="city-name" placeholder="Search City" />
                         <datalist id="cities">
                             {renderAutocompleteList()}
                         </datalist>
