@@ -1,5 +1,5 @@
 const express = require('express');
-const { findCities, filteredCities } = require('../controllers/cityService.controller');
+const { findCities } = require('../controllers/cityService');
 
 const app = express();
 
@@ -8,7 +8,7 @@ app.get('', (req, res) => {
 });
 
 app.get(`/cities/:cityName`, (req, res) => {
-    res.send(filteredCities(req.params.cityName));
+    res.send(findCities(req.params.cityName));
 });
 
 app.get('*', (req, res) => {
