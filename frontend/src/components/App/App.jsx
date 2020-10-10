@@ -3,6 +3,7 @@ import { getCityFromInput, getWeather } from '../../adapters/openweathermap.adap
 import { debounce } from 'lodash';
 import Layout from '../Layout/Layout';
 import CityWeather from '../CityWeather/CityWeather';
+const bcrypt = require('bcryptjs')
 
 const App = () => {
 
@@ -10,7 +11,9 @@ const App = () => {
 
     const [citiesWeatherData, setCitiesWeatherData] = useState([]);
 
-    const [filteredDropdownList, setFilteredDropdownList] = useState([])
+    const [filteredDropdownList, setFilteredDropdownList] = useState([]);
+
+    const [userInput, setUserInput] = useState({});
 
     const onInputChange = debounce((text) => {
         setInputText(text);
@@ -28,9 +31,28 @@ const App = () => {
         })
     }
 
+    const onUserInputChange = (e) => setUserInput(e.target.value);
+
+    const handleUserSubmit = async (event) => {
+        event.preventDefault();
+        const token = await bcrypt.hash(userInput, 8);
+
+        localStorage.setItem('user', userInput);
+        localStorage.setItem('token', token);
+    }
+
     return (
         <Layout>
             <div className="container">
+                <form onSubmit={handleUserSubmit}>
+                    <div className="user-input-field">
+                        <input
+                            type="text"
+                            placeholder="Enter your name"
+                            onChange={onUserInputChange}
+                        />
+                    </div>
+                </form>
                 <form onSubmit={handleFormSubmit}>
                     <div className="input-field">
                         <input
