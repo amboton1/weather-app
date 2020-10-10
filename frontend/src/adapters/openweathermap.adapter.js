@@ -43,3 +43,12 @@ export const getForecast = (cityName) => {
         })
     )
 }
+
+export const getCityFromInput = (cityName) => {
+    return (
+        axios.get(`/cities/${cityName}`).then(response => {
+            const autocompleteDropdownCities = response.data;
+            return autocompleteDropdownCities;
+        })
+    )
+}
