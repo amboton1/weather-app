@@ -3,6 +3,7 @@ import { getCityFromInput, getWeather } from '../../adapters/openweathermap.adap
 import { debounce } from 'lodash';
 import Layout from '../Layout/Layout';
 import CityWeather from '../CityWeather/CityWeather';
+import UserInput from './../UserInput';
 const bcrypt = require('bcryptjs')
 
 const App = () => {
@@ -44,15 +45,10 @@ const App = () => {
     return (
         <Layout>
             <div className="container">
-                <form onSubmit={handleUserSubmit}>
-                    <div className="user-input-field">
-                        <input
-                            type="text"
-                            placeholder="Enter your name"
-                            onChange={onUserInputChange}
-                        />
-                    </div>
-                </form>
+                <UserInput
+                    handleUserSubmit={handleUserSubmit}
+                    onUserInputChange={onUserInputChange}
+                />
                 <form onSubmit={handleFormSubmit}>
                     <div className="input-field">
                         <input
