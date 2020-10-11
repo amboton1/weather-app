@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { getCityFromInput, getWeather } from '../../adapters/openweathermap.adapter';
+import { getCityFromInput, getWeather, submitNewUserCity } from '../../adapters/openweathermap.adapter';
 import { debounce } from 'lodash';
 import Layout from '../Layout/Layout';
 import CityWeather from '../CityWeather/CityWeather';
@@ -25,6 +25,12 @@ const App = () => {
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
+        const user = localStorage.getItem('user');
+        const token = localStorage.getItem('token');
+
+        submitNewUserCity(user, token, inputText).then(userInformation => {
+            console.log(userInformation);
+        });
 
         getWeather(inputText).then((weatherData) => {
             setCitiesWeatherData([...citiesWeatherData, weatherData]);

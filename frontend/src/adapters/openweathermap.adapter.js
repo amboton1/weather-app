@@ -52,3 +52,16 @@ export const getCityFromInput = (cityName) => {
         })
     )
 }
+
+export const submitNewUserCity = (user, token, city) => {
+    return (
+        axios.post('/user-cities/new-city', { user: user, token: token, city: city })
+            .then(res => {
+                const userInformations = res.data;
+                return userInformations;
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    )
+}
