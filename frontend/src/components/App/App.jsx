@@ -28,9 +28,7 @@ const App = () => {
         const user = localStorage.getItem('user');
         const token = localStorage.getItem('token');
 
-        submitNewUserCity(user, token, inputText).then(userInformation => {
-            console.log(userInformation);
-        });
+        submitNewUserCity(user, token, inputText);
 
         getWeather(inputText).then((weatherData) => {
             setCitiesWeatherData([...citiesWeatherData, weatherData]);
