@@ -17,16 +17,15 @@ app.get(`/cities/:cityName`, (req, res) => {
 app.post('/user-cities', (req, res) => {
     try {
         if (fs.existsSync(`${req.body.user}.txt`)) {
-            let counter = 0;
             let onlyUserCities = [];
             const userFileData = fs.readFileSync(`${req.body.user}.txt`, 'utf8');
 
             if (userFileData.includes(`${req.body.token}`)) {
-                userFileData.split(/\n/).forEach((line) => {
-                    if (counter !== 0) {
+                userFileData.split(/\n/).forEach((line, index) => {
+                    if (index !== 0) {
                         onlyUserCities.push(line);
                     }
-                    counter += 1;
+                    index += 1;
                 });
                 res.json(onlyUserCities);
             } else {
