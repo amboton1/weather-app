@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const readline = require('readline');
 const { findCities } = require('../controllers/cityService');
+const { readCities, readFile, fileExist } = require('../controllers/fileService');
 
 const app = express();
 app.use(express.json());
@@ -16,24 +17,20 @@ app.get(`/cities/:cityName`, (req, res) => {
 
 app.post('/user-cities', (req, res) => {
     try {
-        if (fs.existsSync(`${req.body.user}.txt`)) {
-            let onlyUserCities = [];
-            const userFileData = fs.readFileSync(`${req.body.user}.txt`, 'utf8');
+        const fileName = req.body.user;
+        const token = req.body.token;
 
-            if (userFileData.includes(`${req.body.token}`)) {
-                userFileData.split(/\n/).forEach((line, index) => {
-                    if (index !== 0) {
-                        onlyUserCities.push(line);
-                    }
-                    index += 1;
-                });
-                res.json(onlyUserCities);
-            } else {
-                res.send(403);
-            }
-        } else {
-            res.send(404);
+        if (!fileExist(fileName)) {
+            return res.status(404).send('User does not exist!');
         }
+
+        const file = readFile(fileName);
+
+        if (!file.includes(token)) {
+            return res.status(403).send('User has no permission.');
+        }
+
+        res.json(readCities(file))
     } catch(err) {
         console.error(err);
     }
