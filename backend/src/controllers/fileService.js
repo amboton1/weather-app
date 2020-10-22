@@ -8,6 +8,18 @@ function readFile(fileName) {
     return fs.readFileSync(`${fileName}.txt`, 'utf8');
 }
 
+function writeCity(username, city) {
+    fs.appendFile(`${username}.txt`, `\n${city}`, (err) => {
+        if (err) throw err;
+    })
+}
+
+function createUserWeatherFile(username, token, city) {
+    fs.appendFile(`${username}.txt`, `${token}\n${city}`, (err) => {
+        if (err) throw err;
+    })
+}
+
 function readCities(file) {
     let onlyUserCities = [];
     file.split(/\n/).forEach((line, index) => {
@@ -19,4 +31,4 @@ function readCities(file) {
     return onlyUserCities;
 }
 
-module.exports = { fileExist, readFile, readCities }
+module.exports = { fileExist, readFile, readCities, writeCity, createUserWeatherFile }

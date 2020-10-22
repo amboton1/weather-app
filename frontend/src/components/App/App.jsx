@@ -16,6 +16,8 @@ const App = () => {
 
     const [userInput, setUserInput] = useState({});
 
+    const [showingUserInput, isShowingUserInput] = useState(false);
+
     const onInputChange = debounce((text) => {
         setInputText(text);
         getCityFromInput(text).then((autocompleteDropdownCities) => setFilteredDropdownList(autocompleteDropdownCities));
@@ -49,24 +51,34 @@ const App = () => {
     useEffect(() => {
         const getUserInput = localStorage.getItem('user');
         const getUserToken = localStorage.getItem('token');
-        displayUserCities(getUserInput, getUserToken).then((userCitiesList) => {
-            Promise.all(userCitiesList).then((values) => {
-                for (let index = 0; index < values.length; index++) {
-                    getWeather(values[index]).then((weatherData) => {
-                        setCitiesWeatherData([...citiesWeatherData, weatherData])
-                    })
-                }
-            })
-        })
+
+        if(getUserInput) isShowingUserInput(true);
+
+        // displayUserCities(getUserInput, getUserToken).then((userCitiesList) => {
+        //     console.log(userCitiesList)
+        //     // Promise.all(userCitiesList).then((values) => {
+        //     //     for (let index = 0; index < values.length; index++) {
+        //     //         getWeather(values[index]).then((weatherData) => {
+        //     //             setCitiesWeatherData([...citiesWeatherData, weatherData])
+        //     //         })
+        //     //     }
+        //     // })
+        // })
     }, [])
 
     return (
         <Layout>
             <div className="container">
-                <UserInput
-                    handleUserSubmit={handleUserSubmit}
-                    onUserInputChange={onUserInputChange}
-                />
+                {
+                    !showingUserInput ? (
+                        <UserInput
+                            handleUserSubmit={handleUserSubmit}
+                            onUserInputChange={onUserInputChange}
+                        />
+                    ) : (
+                        null
+                    )
+                }
                 <form onSubmit={handleFormSubmit}>
                     <div className="input-field">
                         <input

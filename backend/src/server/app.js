@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const readline = require('readline');
 const { findCities } = require('../controllers/cityService');
-const { readCities, readFile, fileExist } = require('../controllers/fileService');
+const { readCities, readFile, fileExist, writeCity, createUserWeatherFile } = require('../controllers/fileService');
 
 const app = express();
 app.use(express.json());
@@ -38,19 +38,21 @@ app.post('/user-cities', (req, res) => {
 
 app.post('/user-cities/new-city', (req, res) => {
     try {
-        if (fs.existsSync(`${req.body.user}.txt`)) {
-            const data = fs.readFileSync(`${req.body.user}.txt`, 'utf8');
-            if (data.includes(`${req.body.city}`)) {
-                return;
-            } else {
-                fs.appendFile(`${req.body.user}.txt`, `\n${req.body.city}`, (err) => {
-                    if (err) throw err;
-                })
-            }
+        const username = req.body.user;
+        const token = req.body.token;
+        const city = req.body.city;
+
+        if (!fileExist(username)) {
+            createUserWeatherFile(username, token, city);
+            return;
+        }
+
+        const file = readFile(username);
+
+        if (!file.includes(city)) {
+            writeCity(username, city)
         } else {
-            fs.appendFile(`${req.body.user}.txt`, `${req.body.token}\n${req.body.city}`, (err) => {
-                if (err) throw err;
-            })
+            return;
         }
     } catch(err) {
         console.error(err)

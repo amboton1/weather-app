@@ -4,7 +4,7 @@ const UserInput = ({handleUserSubmit, onUserInputChange}) => {
         return (
             <div className="user-info">
                 <form onSubmit={handleUserSubmit}>
-                    <div className="user-input-field">
+                    <div className="input-field">
                         <input
                             type="text"
                             placeholder="Enter your name"
