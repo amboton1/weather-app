@@ -17,14 +17,17 @@ app.get(`/cities/:cityName`, (req, res) => {
 
 app.post('/user-cities', (req, res) => {
     try {
-        const fileName = req.body.user;
-        const token = req.body.token;
+        const { user, token } = req.body;
 
-        if (!fileExist(fileName)) {
+        if (!fileExist(user)) {
             return res.status(404).send('User does not exist!');
         }
 
-        const file = readFile(fileName);
+        const file = readFile(user);
+
+        if (token === '') {
+            return res.status(404).send('Token is empty!');
+        }
 
         if (!file.includes(token)) {
             return res.status(403).send('User has no permission.');
@@ -38,19 +41,17 @@ app.post('/user-cities', (req, res) => {
 
 app.post('/user-cities/new-city', (req, res) => {
     try {
-        const username = req.body.user;
-        const token = req.body.token;
-        const city = req.body.city;
+        const { user, token, city } = req.body;
 
-        if (!fileExist(username)) {
-            createUserWeatherFile(username, token, city);
+        if (!fileExist(user)) {
+            createUserWeatherFile(user, token, city);
             return;
         }
 
-        const file = readFile(username);
+        const file = readFile(user);
 
         if (!file.includes(city)) {
-            writeCity(username, city)
+            writeCity(user, city)
         } else {
             return;
         }

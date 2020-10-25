@@ -49,34 +49,33 @@ const App = () => {
     }
 
     useEffect(() => {
-        const getUserInput = localStorage.getItem('user');
+        const existingUser = localStorage.getItem('user');
         const getUserToken = localStorage.getItem('token');
 
-        if(getUserInput) isShowingUserInput(true);
+        if (existingUser) {
+            isShowingUserInput(true);
 
-        // displayUserCities(getUserInput, getUserToken).then((userCitiesList) => {
-        //     console.log(userCitiesList)
-        //     // Promise.all(userCitiesList).then((values) => {
-        //     //     for (let index = 0; index < values.length; index++) {
-        //     //         getWeather(values[index]).then((weatherData) => {
-        //     //             setCitiesWeatherData([...citiesWeatherData, weatherData])
-        //     //         })
-        //     //     }
-        //     // })
-        // })
+            displayUserCities(existingUser, getUserToken).then((userCitiesList) => {
+                const userCitiesPromises = userCitiesList.map(city => {
+                    const cityWithoutCountry = city.split(',')[0];
+                    return getWeather(cityWithoutCountry);
+                });
+
+                Promise.all(userCitiesPromises).then(results => {
+                    setCitiesWeatherData(citiesWeatherData.concat(results));
+                })
+            })
+        }
     }, [])
 
     return (
         <Layout>
             <div className="container">
-                {
-                    !showingUserInput ? (
+                {!showingUserInput && (
                         <UserInput
                             handleUserSubmit={handleUserSubmit}
                             onUserInputChange={onUserInputChange}
                         />
-                    ) : (
-                        null
                     )
                 }
                 <form onSubmit={handleFormSubmit}>
