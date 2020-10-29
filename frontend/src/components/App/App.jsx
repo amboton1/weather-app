@@ -56,6 +56,7 @@ const App = () => {
             isShowingUserInput(true);
 
             displayUserCities(existingUser, getUserToken).then((userCitiesList) => {
+                if(!userCitiesList) return;
                 const userCitiesPromises = userCitiesList.map(city => {
                     const cityWithoutCountry = city.split(',')[0];
                     return getWeather(cityWithoutCountry);
