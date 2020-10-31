@@ -18,6 +18,8 @@ const App = () => {
 
     const [showingUserInput, isShowingUserInput] = useState(false);
 
+    const [isCityAlreadyInState, setIsCityAlreadyInState] = useState(false);
+
     const onInputChange = debounce((text) => {
         setInputText(text);
         getCityFromInput(text).then((autocompleteDropdownCities) => setFilteredDropdownList(autocompleteDropdownCities));
@@ -32,10 +34,20 @@ const App = () => {
 
         submitNewUserCity(user, token, inputText);
 
-        getWeather(inputText).then((weatherData) => {
-            setCitiesWeatherData([...citiesWeatherData, weatherData]);
-            setInputText('');
-        })
+        
+        if (citiesWeatherData) {
+            citiesWeatherData.map((city) => {
+                if (city.cityName === inputText) {
+                    setIsCityAlreadyInState(true);
+                    return;
+                }
+            })
+        } else {
+            getWeather(inputText).then((weatherData) => {
+                setCitiesWeatherData([...citiesWeatherData, weatherData]);
+                setInputText('');
+            })
+        }
     }
 
     const onUserInputChange = (e) => setUserInput(e.target.value);
@@ -93,6 +105,7 @@ const App = () => {
                             {renderAutocompleteList()}
                         </datalist>
                     </div>
+                    {isCityAlreadyInState && <i className="repeated-city-notice">City already in the list!</i>}
                 </form>
                 <main className="main-content">
                     {
