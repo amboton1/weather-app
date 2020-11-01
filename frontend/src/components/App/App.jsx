@@ -27,6 +27,19 @@ const App = () => {
 
     const renderAutocompleteList = () => filteredDropdownList.map((item, index) => <option key={index} value={item} />)
 
+    const getWeatherForEnteredCity = () => {
+        getWeather(inputText).then((weatherData) => {
+            for (let index = 0; index < citiesWeatherData.length; index++) {
+                if (citiesWeatherData[index].cityName === inputText) {
+                    setIsCityAlreadyInState(true);
+                    return;
+                }
+            }
+            setCitiesWeatherData([...citiesWeatherData, weatherData]);
+            setInputText('');
+        })
+    }
+
     const handleFormSubmit = (event) => {
         event.preventDefault();
         const user = localStorage.getItem('user');
@@ -34,20 +47,9 @@ const App = () => {
 
         submitNewUserCity(user, token, inputText);
 
-        
-        if (citiesWeatherData) {
-            citiesWeatherData.map((city) => {
-                if (city.cityName === inputText) {
-                    setIsCityAlreadyInState(true);
-                    return;
-                }
-            })
-        } else {
-            getWeather(inputText).then((weatherData) => {
-                setCitiesWeatherData([...citiesWeatherData, weatherData]);
-                setInputText('');
-            })
-        }
+        getWeatherForEnteredCity();
+
+        setIsCityAlreadyInState(false);
     }
 
     const onUserInputChange = (e) => setUserInput(e.target.value);
