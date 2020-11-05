@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { displayUserCities, getCityFromInput, getWeather, submitNewUserCity } from '../../adapters/openweathermap.adapter';
+import { getUserCities, getCityFromInput, getWeather, submitNewUserCity } from '../../adapters/openweathermap.adapter';
 import { debounce } from 'lodash';
 import Layout from '../Layout/Layout';
 import CityWeather from '../CityWeather/CityWeather';
@@ -69,7 +69,7 @@ const App = () => {
         if (existingUser) {
             isShowingUserInput(true);
 
-            displayUserCities(existingUser, getUserToken).then((userCitiesList) => {
+            getUserCities(existingUser, getUserToken).then((userCitiesList) => {
                 if(!userCitiesList) return;
                 const userCitiesPromises = userCitiesList.map(city => {
                     const cityWithoutCountry = city.split(',')[0];

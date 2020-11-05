@@ -66,7 +66,7 @@ export const submitNewUserCity = (user, token, city) => {
     )
 }
 
-export const displayUserCities = (user, token) => {
+export const getUserCities = (user, token) => {
     return (
         axios.post('/user-cities', { user: user, token: token }).then(res => {
             const userCitiesList = res.data;
