@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { getCityFromInput, getWeather } from '../../adapters/openweathermap.adapter';
+import React, { useState, useEffect } from 'react';
+import { getUserCities, getCityFromInput, getWeather, submitNewUserCity } from '../../adapters/openweathermap.adapter';
 import { debounce } from 'lodash';
 import Layout from '../Layout/Layout';
 import CityWeather from '../CityWeather/CityWeather';
+import UserInput from './../UserInput';
+const bcrypt = require('bcryptjs')
 
 const App = () => {
 
@@ -10,7 +12,13 @@ const App = () => {
 
     const [citiesWeatherData, setCitiesWeatherData] = useState([]);
 
-    const [filteredDropdownList, setFilteredDropdownList] = useState([])
+    const [filteredDropdownList, setFilteredDropdownList] = useState([]);
+
+    const [userInput, setUserInput] = useState({});
+
+    const [showingUserInput, isShowingUserInput] = useState(false);
+
+    const [isCityAlreadyInState, setIsCityAlreadyInState] = useState(false);
 
     const onInputChange = debounce((text) => {
         setInputText(text);
@@ -19,18 +27,72 @@ const App = () => {
 
     const renderAutocompleteList = () => filteredDropdownList.map((item, index) => <option key={index} value={item} />)
 
-    const handleFormSubmit = (event) => {
-        event.preventDefault();
-
+    const getWeatherForEnteredCity = () => {
         getWeather(inputText).then((weatherData) => {
+            for (let index = 0; index < citiesWeatherData.length; index++) {
+                if (citiesWeatherData[index].cityName === inputText) {
+                    setIsCityAlreadyInState(true);
+                    return;
+                }
+            }
             setCitiesWeatherData([...citiesWeatherData, weatherData]);
             setInputText('');
         })
     }
 
+    const handleFormSubmit = (event) => {
+        event.preventDefault();
+        const user = localStorage.getItem('user');
+        const token = localStorage.getItem('token');
+
+        submitNewUserCity(user, token, inputText);
+
+        getWeatherForEnteredCity();
+
+        setIsCityAlreadyInState(false);
+    }
+
+    const onUserInputChange = (e) => setUserInput(e.target.value);
+
+    const handleUserSubmit = async (event) => {
+        event.preventDefault();
+        const token = await bcrypt.hash(userInput, 8);
+
+        localStorage.setItem('user', userInput);
+        localStorage.setItem('token', token);
+    }
+
+    useEffect(() => {
+        const existingUser = localStorage.getItem('user');
+        const getUserToken = localStorage.getItem('token');
+
+        if (existingUser) {
+            isShowingUserInput(true);
+
+            getUserCities(existingUser, getUserToken).then((userCitiesList) => {
+                if(!userCitiesList) return;
+                const userCitiesPromises = userCitiesList.map(city => {
+                    const cityWithoutCountry = city.split(',')[0];
+                    return getWeather(cityWithoutCountry);
+                });
+
+                Promise.all(userCitiesPromises).then(results => {
+                    setCitiesWeatherData(citiesWeatherData.concat(results));
+                })
+            })
+        }
+    }, [])
+
     return (
         <Layout>
             <div className="container">
+                {!showingUserInput && (
+                        <UserInput
+                            handleUserSubmit={handleUserSubmit}
+                            onUserInputChange={onUserInputChange}
+                        />
+                    )
+                }
                 <form onSubmit={handleFormSubmit}>
                     <div className="input-field">
                         <input
@@ -45,6 +107,7 @@ const App = () => {
                             {renderAutocompleteList()}
                         </datalist>
                     </div>
+                    {isCityAlreadyInState && <i className="repeated-city-notice">City already in the list!</i>}
                 </form>
                 <main className="main-content">
                     {
