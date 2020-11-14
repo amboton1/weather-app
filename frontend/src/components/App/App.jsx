@@ -20,10 +20,14 @@ const App = () => {
 
     const [isCityAlreadyInState, setIsCityAlreadyInState] = useState(false);
 
-    const onInputChange = debounce((text) => {
-        setInputText(text);
-        getCityFromInput(text).then((autocompleteDropdownCities) => setFilteredDropdownList(autocompleteDropdownCities));
+    const debouncedCitiesFromInput = debounce(query => {
+        getCityFromInput(query).then((autocompleteDropdownCities) => setFilteredDropdownList(autocompleteDropdownCities));
     }, 500)
+
+    const onCityInputChange = (e) => {
+        setInputText(e.target.value);
+        debouncedCitiesFromInput(e.target.value);
+    }
 
     const renderAutocompleteList = () => filteredDropdownList.map((item, index) => <option key={index} value={item} />)
 
@@ -98,7 +102,7 @@ const App = () => {
                         <input
                             autoComplete="off"
                             list="cities"
-                            onChange={(e) => onInputChange(e.target.value)}
+                            onChange={onCityInputChange}
                             type="text"
                             id="city-name"
                             placeholder="Search City"

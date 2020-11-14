@@ -11,6 +11,10 @@ header {
 
 .entry {
   flex: 0 0 calc(33.3% - 1rem);
+
+  @media (max-width: 768px) {
+    flex: 1;
+  }
 }
 
   @media (max-width: 768px) {
