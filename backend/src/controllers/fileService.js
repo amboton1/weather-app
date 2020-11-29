@@ -9,13 +9,11 @@ function readFile(fileName) {
 }
 
 function writeCity(username, city) {
-    fs.appendFile(`${username}.txt`, `\n${city}`, (err) => {
-        if (err) throw err;
-    })
+    fs.appendFileSync(`${username}.txt`, `\n${city}`);
 }
 
 function createUserWeatherFile(username, token, city) {
-    fs.appendFile(`${username}.txt`, `${token}\n${city}`, (err) => {
+    return fs.appendFile(`${username}.txt`, `${token}\n${city}`, (err) => {
         if (err) throw err;
     })
 }

@@ -51,9 +51,10 @@ app.post('/user-cities/new-city', (req, res) => {
         const file = readFile(user);
 
         if (!file.includes(city)) {
-            writeCity(user, city)
+            writeCity(user, city);
+            res.send(201);
         } else {
-            return;
+            res.send(422);
         }
     } catch(err) {
         console.error(err)
